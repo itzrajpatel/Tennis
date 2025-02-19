@@ -153,16 +153,7 @@ const Shop = () => {
                       </li>
                     ) : (
                       <li className="nav-item dropdown">
-                        <img 
-                          src={avatar} 
-                          className="rounded-circle mt-2" 
-                          alt="Profile" 
-                          width="30" 
-                          height="30" 
-                          data-bs-toggle="dropdown" 
-                          aria-expanded="false" 
-                          style={{ cursor: "pointer" }}
-                        />
+                        <img src={avatar} className="rounded-circle mt-2" alt="Profile" width="30" height="30" data-bs-toggle="dropdown" aria-expanded="false" style={{ cursor: "pointer" }} />
                         <ul className="dropdown-menu dropdown-menu-end mt-3 bg-dark">
                           <li>
                             <button id="logoutbtn" className="dropdown-item text-light" onClick={handleLogout}>

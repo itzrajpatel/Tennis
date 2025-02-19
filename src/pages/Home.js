@@ -63,7 +63,7 @@ const Home = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
 
   useEffect(() => {
-    const duration = 5000; // 5 seconds
+    const duration = 8000; // 8 seconds
     const steps = 100; // Number of updates
     const intervalTime = duration / steps; 
 
@@ -416,7 +416,7 @@ const Home = () => {
     <div className="container-fluid my-5 p-5" style={{ backgroundColor: "#f3f8f9" }}>
       <div className="row text-center">
         {/* GROUP MEMBERSHIP */}
-        <div className="col-md-3">
+        <div className="col-md-4">
           <div className="p-4">
             <div className="bg-white text-dark text-center mx-auto p-3 shadow-lg rounded" style={{ height: "100%", width: "auto" }}>
               <h1 className="py-3" style={{ fontSize: "25px", fontFamily: "Oswald, sans-serif" }}>GROUP</h1>
@@ -427,13 +427,13 @@ const Home = () => {
               <p className="text-muted mt-3">Elis tempor</p>
               <p className="text-muted mt-2">Adipiscing consect</p>
               <p className="text-muted mt-2">Voluptatem quia voluptas</p>
-              <button type="button" className="btn btn-success mt-4" style={{ height: "auto", width: "auto" }}>GET NOW</button>
+              <button type="button" className="btn btn-success mt-5" style={{ height: "auto", width: "auto" }}>GET NOW</button>
             </div>
           </div>
         </div>
 
         {/* PERSONAL MEMBERSHIP */}
-        <div className="col-md-3">
+        <div className="col-md-4">
           <div className="p-4">
             <div className="bg-white text-dark text-center mx-auto p-3 shadow-lg rounded" style={{ height: "100%", width: "auto" }}>
               <h1 className="py-3" style={{ fontSize: "25px", fontFamily: "Oswald, sans-serif" }}>PERSONAL</h1>
@@ -444,13 +444,13 @@ const Home = () => {
               <p className="text-muted mt-3">Elis tempor</p>
               <p className="text-muted mt-2">Adipiscing consect</p>
               <p className="text-muted mt-2">Voluptatem quia voluptas</p>
-              <button type="button" className="btn btn-dark mt-4" style={{ height: "auto", width: "auto" }}>GET NOW</button>
+              <button type="button" className="btn btn-dark mt-5" style={{ height: "auto", width: "auto" }}>GET NOW</button>
             </div>
           </div>
         </div>
 
         {/* MEMBERSHIP INFO & VIDEO */}
-        <div className="col-md-6 d-flex flex-column align-items-center justify-content-center text-center p-4">
+        <div className="col-md-4 d-flex flex-column align-items-center justify-content-center text-center p-4">
           <h4 className="text-uppercase" style={{ fontSize: "20px", fontFamily: "Lucida Sans, sans-serif", letterSpacing: "3px", marginTop: "20px" }}>Our Plans</h4>
           <h1 className="my-4" style={{ fontFamily: "Oswald, sans-serif" }}>Club Membership</h1>
           <p className="text-muted">Adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.</p>
@@ -472,30 +472,11 @@ const Home = () => {
           {/* Event Title Section */}
           <div className="col-md-3">
             <div className="p-4">
-              <div
-                className="text-dark text-center mx-auto"
-                style={{ width: "auto", height: "400px" }}
-              >
-                <h1
-                  className="mx-auto"
-                  style={{
-                    paddingTop: "4em",
-                    fontSize: "20px",
-                    fontFamily:
-                      "'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif",
-                    letterSpacing: "5px",
-                  }}
-                >
+              <div className="text-dark text-center mx-auto" style={{ width: "auto", height: "400px" }}>
+                <h1 className="mx-auto" style={{ paddingTop: "4em", fontSize: "20px", fontFamily: "'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif", letterSpacing: "5px" }}>
                   GAMES CALENDAR
                 </h1>
-                <h1
-                  className="mx-auto"
-                  style={{
-                    paddingTop: "2em",
-                    fontSize: "50px",
-                    fontFamily: "Oswald, sans-serif",
-                  }}
-                >
+                <h1 className="mx-auto" style={{ paddingTop: "2em", fontSize: "50px", fontFamily: "Oswald, sans-serif" }}>
                   FUTURE EVENTS
                 </h1>
               </div>

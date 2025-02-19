@@ -74,21 +74,9 @@ const LoginSignup = () => {
                     <div className="signup">
                         <form onSubmit={handleSignup}>
                             <label>Sign up</label>
-                            <input 
-                                type="text" 
-                                value={username} 
-                                onChange={(e) => setUsername(e.target.value)} 
-                                placeholder="Username" 
-                                required 
-                            />
-                            <input 
-                                type="password" 
-                                value={password} 
-                                onChange={(e) => setPassword(e.target.value)} 
-                                placeholder="Password" 
-                                required 
-                            />
-                            <button id="loginsignup" type="submit">Sign up</button>
+                            <input className="mx-auto form-control" style={{ width: "80%"}} type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" required />
+                            <input className="mx-auto form-control" style={{ width: "80%"}} type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
+                            <button className="btn" id="loginsignup" type="submit">Sign up</button>
                         </form>
                         <p className="my-5">Already have an account? <span onClick={() => setIsSignup(false)}>Login</span></p>
                     </div>
@@ -96,21 +84,9 @@ const LoginSignup = () => {
                     <div className="login">
                         <form onSubmit={handleLogin}>
                             <label>Login</label>
-                            <input 
-                                type="text" 
-                                value={username} 
-                                onChange={(e) => setUsername(e.target.value)} 
-                                placeholder="Username" 
-                                required 
-                            />
-                            <input 
-                                type="password" 
-                                value={password} 
-                                onChange={(e) => setPassword(e.target.value)} 
-                                placeholder="Password" 
-                                required 
-                            />
-                            <button id="loginsignup" type="submit">Login</button>
+                            <input className="mx-auto form-control" style={{ width: "80%"}} type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" required />
+                            <input className="mx-auto form-control" style={{ width: "80%"}} type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
+                            <button className="btn" id="loginsignup" type="submit">Login</button>
                         </form>
                         <p className="my-5">Don't have an account? <span onClick={() => setIsSignup(true)}>Sign up</span></p>
                     </div>

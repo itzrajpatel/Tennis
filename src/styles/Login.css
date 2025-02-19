@@ -105,7 +105,7 @@ span:hover {
 /* Mobile Responsive */
 @media (max-width: 768px) {
     .main {
-        width: 80%;
+        width: auto;
         height: auto;
     }
     input, #loginsignup {
