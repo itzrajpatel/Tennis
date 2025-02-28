@@ -46,74 +46,230 @@ const Shop = () => {
     const [maxPrice, setMaxPrice] = useState(170);
     const [loggedInUser, setLoggedInUser] = useState(null);
     const navigate = useNavigate(); // Hook for navigation
-
-    // Testing
     const [currentPage, setCurrentPage] = useState(1); // Pagination state
 
     // const addToCart = (product) => {
+    //     if (!loggedInUser) {
+    //         alert("Please log in to add items to your cart.");
+    //         return;
+    //     }
+    
+    //     // Retrieve the existing cart from localStorage
+    //     let cartItems = JSON.parse(localStorage.getItem(`cart_${loggedInUser}`)) || [];
+    
+    //     // Check if the product already exists in the cart
+    //     const existingItemIndex = cartItems.findIndex(item => item.id === product.id);
+    
+    //     if (existingItemIndex !== -1) {
+    //         cartItems[existingItemIndex].quantity += 1;
+    //     } else {
+    //         cartItems.push({ ...product, quantity: 1 });
+    //     }
+    
+    //     // Update the state and localStorage
+    //     setCart(cartItems);
+    //     localStorage.setItem(`cart_${loggedInUser}`, JSON.stringify(cartItems));       
+    // };
+    
+    // TESTING
+    const addToCart = async (product) => {
+      if (!loggedInUser) {
+          alert("Please log in to add items to your cart.");
+          return;
+      }
+  
+      // ✅ Check if the item already exists in the cart
+      const isItemInCart = cart.some((item) => item.product_name === product.name);
+      if (isItemInCart) {
+          alert("Item already present in cart...");
+          return;
+      }
+  
+      const cartItem = {
+          username: loggedInUser,
+          product_name: product.name,
+          price: product.price,
+          image: product.image,
+          quantity: 1,  // Default quantity
+      };
+  
+      try {
+          const response = await fetch("http://localhost:5000/cart/add", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(cartItem),
+          });
+  
+          const data = await response.json(); // Parse response
+  
+          if (response.ok) {
+              const updatedCart = [...cart, cartItem]; // ✅ Instantly update UI
+              setCart(updatedCart);
+              localStorage.setItem(`cart_${loggedInUser}`, JSON.stringify(updatedCart)); // ✅ Sync with localStorage
+              alert(data.message);
+          } else {
+              alert(data.message); // Show error message from backend
+          }
+      } catch (error) {
+          console.error("Error adding item:", error);
+      }
+  };  
+
+    // const handleCheckout = () => {
     //   if (!loggedInUser) {
-    //       alert("Please log in to add items to your cart.");
+    //       alert("Please log in to continue!");
     //       return;
     //   }
-  
-    //   const updatedCart = [...cart, product];
-    //   setCart(updatedCart);
-    //   localStorage.setItem(`cart_${loggedInUser}`, JSON.stringify(updatedCart));
-    // };
 
-    const addToCart = (product) => {
-        if (!loggedInUser) {
-            alert("Please log in to add items to your cart.");
-            return;
-        }
-    
-        // Retrieve the existing cart from localStorage
-        let cartItems = JSON.parse(localStorage.getItem(`cart_${loggedInUser}`)) || [];
-    
-        // Check if the product already exists in the cart
-        const existingItemIndex = cartItems.findIndex(item => item.id === product.id);
-    
-        if (existingItemIndex !== -1) {
-            // If product exists, increase its quantity
-            cartItems[existingItemIndex].quantity += 1;
-        } else {
-            // If new product, add it with quantity 1
-            cartItems.push({ ...product, quantity: 1 });
-        }
-    
-        // Update the state and localStorage
-        setCart(cartItems);
-        localStorage.setItem(`cart_${loggedInUser}`, JSON.stringify(cartItems));
-    };
+    //   if (cart.length === 0) {
+    //       alert("Please add items to cart...");
+    //       return;
+    //   }
+
+    //   // ✅ Fetch existing orders
+    //   const existingOrders = JSON.parse(localStorage.getItem(`orders_${loggedInUser}`)) || [];
+
+    //   // ✅ Check for duplicate items
+    //   const duplicateItems = cart.filter(cartItem =>
+    //       existingOrders.some(orderItem => orderItem.name === cartItem.name)
+    //   );
+
+    //   if (duplicateItems.length > 0) {
+    //       alert(`${duplicateItems.map(item => item.name).join(", ")} already added...`);
+    //       return;
+    //   }
+
+    //   // ✅ Add new items to orders
+    //   const updatedOrders = [...existingOrders, ...cart];
+    //   localStorage.setItem(`orders_${loggedInUser}`, JSON.stringify(updatedOrders));
+
+    //   // ✅ Empty the cart after checkout
+    //   setCart([]);
+    //   localStorage.removeItem(`cart_${loggedInUser}`);
+
+    //   navigate("/orders");
+    // };
+    const handleCheckout = async () => {
+      if (!loggedInUser) {
+          alert("Please log in to continue!");
+          return;
+      }
+  
+      if (cart.length === 0) {
+          alert("Please add items to the cart...");
+          return;
+      }
+  
+      // ✅ Fetch existing orders
+      let existingOrders = JSON.parse(localStorage.getItem(`orders_${loggedInUser}`)) || [];
+  
+      // ✅ Prevent duplicate items in orders
+      const duplicateItems = cart.filter(cartItem =>
+          existingOrders.some(orderItem => orderItem.product_name === cartItem.product_name)
+      );
+  
+      if (duplicateItems.length > 0) {
+          alert(`${duplicateItems.map(item => item.product_name).join(", ")} already added...`);
+          return;
+      }
+  
+      // ✅ Add new cart items to orders
+      existingOrders = [...existingOrders, ...cart];
+      localStorage.setItem(`orders_${loggedInUser}`, JSON.stringify(existingOrders));
+  
+      try {
+          console.log("Sending DELETE request to /cart/clear for user:", loggedInUser);
+  
+          // ✅ Remove items from MySQL cart table
+          const response = await fetch("http://localhost:5000/cart/clear", {
+              method: "DELETE",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ username: loggedInUser }), // ✅ Ensure request body is correctly formatted
+          });
+  
+          const data = await response.json();
+          console.log("Response from backend:", data);
+  
+          if (!response.ok) {
+              throw new Error(data.message || "Error clearing cart from database");
+          }
+  
+          // ✅ Clear the cart in state & localStorage
+          setCart([]);
+          localStorage.removeItem(`cart_${loggedInUser}`);
+  
+          // ✅ Redirect to orders page
+          navigate("/orders");
+  
+      } catch (error) {
+          console.error("Checkout Error:", error);
+          alert("Error processing checkout!");
+      }
+  };      
 
     const filteredProducts = products.filter(
         (p) => p.price <= maxPrice && p.name.toLowerCase().includes(search.toLowerCase())
     );
 
-    // Testing
     const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
     const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
     const currentItems = filteredProducts.slice(indexOfFirstItem, indexOfLastItem);
     const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
 
-    useEffect(() => {
-      const user = localStorage.getItem("loggedInUser");
-      setLoggedInUser(user); // Set logged-in user state
+    // useEffect(() => {
+    //   const user = localStorage.getItem("loggedInUser");
+    //   setLoggedInUser(user); // Set logged-in user state
     
-      if (user) {
-        const savedCart = localStorage.getItem(`cart_${user}`);
-        if (savedCart) {
-          setCart(JSON.parse(savedCart)); // Load saved cart for the logged-in user
-        }
-      } else {
-        setCart([]); // Hide cart but keep it saved in localStorage
+    //   if (user) {
+    //     const savedCart = localStorage.getItem(`cart_${user}`);
+    //     if (savedCart) {
+    //       setCart(JSON.parse(savedCart)); // Load saved cart for the logged-in user
+    //     }
+    //   } else {
+    //     setCart([]); // Hide cart but keep it saved in localStorage
+    //   }
+    // }, []);
+
+    // TESTING
+    const fetchCartItems = async (user) => {
+      if (!user) return;  // Ensure user is logged in
+  
+      try {
+          const response = await fetch(`http://localhost:5000/cart/${user}`);
+          if (response.ok) {
+              const data = await response.json();
+              setCart(data); // ✅ Update the state
+              localStorage.setItem(`cart_${user}`, JSON.stringify(data)); // ✅ Sync with localStorage
+          }
+      } catch (error) {
+          console.error("Error fetching cart:", error);
       }
-    }, []);
+  };
+  
+  // ✅ Load cart from localStorage & API on page refresh
+  useEffect(() => {
+      const user = localStorage.getItem("loggedInUser");
+      if (user) {
+          setLoggedInUser(user);
+  
+          // ✅ First, check if cart is in localStorage
+          const storedCart = localStorage.getItem(`cart_${user}`);
+          if (storedCart) {
+              setCart(JSON.parse(storedCart));
+          }
+  
+          // ✅ Fetch latest cart data from backend
+          fetchCartItems(user);
+      }
+  }, []);  
 
     const handleLogout = () => {
-      localStorage.removeItem("loggedInUser"); // Only remove login session
+      localStorage.removeItem("loggedInUser"); // Remove session
+      localStorage.removeItem("token"); // Remove token
       setLoggedInUser(null);
-      setCart([]); // Hide cart items (but they remain in localStorage)
+      setCart([]); // Hide cart items, but keep them stored in MySQL
       navigate("/");
     };
     return (
@@ -141,6 +297,9 @@ const Shop = () => {
                     </li>
                     <li className="nav-item">
                       <Link className="nav-link" to="/shop">Shop</Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link className="nav-link" to="/orders">Orders</Link>
                     </li>
                     <li className="nav-item">
                       <Link className="nav-link" to="/contact">Contact</Link>
@@ -189,7 +348,7 @@ const Shop = () => {
                                     <p style={{fontSize: "30px", fontWeight: "bold", color: "white" }}>${product.price}.00</p>
                             
                                     {/* Larger Add to Cart Button */}
-                                    <button className="btn bg-dark text-light" style={{ width: "200px", fontSize: "15px", padding: "12px 0", borderRadius: "10px" }}  onClick={() => addToCart(product)}>
+                                    <button className="btn bg-dark text-light" style={{ width: "200px", fontSize: "15px", padding: "12px 0", borderRadius: "10px" }}  key={product.id} onClick={() => addToCart(product)}>
                                         ADD TO CART <i className="fa fa-shopping-cart mx-1" aria-hidden="true"></i>
                                     </button>
                                 </div>
@@ -230,16 +389,49 @@ const Shop = () => {
                         ) : (
                             <>
                                 <ul className="mb-3">
-                                    {cart.map((item, index) => (
+                                    {/* {cart.map((item, index) => (
                                         <li style={{ textAlign: "start" }} key={index}>
                                             {item.name} - ${item.price} 
                                             <i style={{ fontSize: "15px", color: "red", cursor: "pointer" }} className="fa fa-trash mx-2" onClick={() => { const updatedCart = cart.filter((_, i) => i !== index); setCart(updatedCart); localStorage.setItem(`cart_${loggedInUser}`, JSON.stringify(updatedCart)); }}> </i>
                                         </li>
+                                    ))} */}
+                                    {cart.map((item, index) => (
+                                      <li style={{ textAlign: "start" }} key={index}>
+                                          {item.product_name} - ${item.price} 
+                                          <i 
+                                              style={{ fontSize: "15px", color: "red", cursor: "pointer" }} 
+                                              className="fa fa-trash mx-2" 
+                                              onClick={async () => {
+                                                  try {
+                                                      const response = await fetch("http://localhost:5000/cart/remove", {
+                                                          method: "DELETE",
+                                                          headers: {
+                                                              "Content-Type": "application/json",
+                                                          },
+                                                          body: JSON.stringify({
+                                                              username: loggedInUser,
+                                                              product_name: item.product_name, // Make sure this matches your backend field
+                                                          }),
+                                                      });
+
+                                                      if (response.ok) {
+                                                          const updatedCart = cart.filter((_, i) => i !== index);
+                                                          setCart(updatedCart);
+                                                          localStorage.setItem(`cart_${loggedInUser}`, JSON.stringify(updatedCart));
+                                                      } else {
+                                                          alert("Error removing item!");
+                                                      }
+                                                  } catch (error) {
+                                                      console.error("Error:", error);
+                                                  }
+                                              }}
+                                          ></i>
+                                      </li>
                                     ))}
                                 </ul>
                                 <hr className="mx-auto"/>
                                 <h5 className="text-dark mx-4 mb-5" style={{ textAlign: "start" }}>
-                                    Total: ${cart.reduce((total, item) => total + item.price, 0)}
+                                    Total: ${cart.reduce((total, item) => total + Number(item.price), 0)}
                                 </h5>
                             </>
                         )}
@@ -258,17 +450,8 @@ const Shop = () => {
                             <input type="range" className="form-range mx-auto" data-bs-theme="dark" min="10" max="170" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} />
                             <p className="text-dark" style={{ textAlign: "center"}}>Price: ${maxPrice}</p>
                         </form>
-                        <button className="btn text-light" style={{ backgroundColor: "#2eac6d", width: "200px", borderRadius: "30px", boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)" }} onClick={() => {
-                            if (!loggedInUser) {
-                              alert("Please log in to continue!");
-                              return;
-                            }
-                            if (cart.length === 0) {
-                              alert("Please add items to cart...");
-                            } else {
-                              navigate("/orders");
-                            }
-                          }}> CHECK OUT <i style={{ fontSize: "15px" }} className="fas mx-2">&#xf291;</i>
+                        <button className="btn text-light" style={{ backgroundColor: "#2eac6d", width: "200px", borderRadius: "30px", boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)" }} onClick={handleCheckout}>
+                          CHECK OUT <i style={{ fontSize: "15px" }} className="fas mx-2">&#xf291;</i>
                         </button>
                     </div>
                 </div>

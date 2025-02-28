@@ -20,31 +20,35 @@ const Order = () => {
             fetchOrders(user);
         }
     }, []);
-
-    // Fetch orders for the logged-in user
+    
+    // ✅ Fetch orders correctly from `orders_${user}`
+    // const fetchOrders = (user) => {
+    //     const storedOrders = JSON.parse(localStorage.getItem(`orders_${user}`)) || [];
+    //     setOrders(storedOrders);
+    // };
     const fetchOrders = (user) => {
-        const storedOrders = JSON.parse(localStorage.getItem(`cart_${user}`)) || [];
+        const storedOrders = JSON.parse(localStorage.getItem(`orders_${user}`)) || [];
         setOrders(storedOrders);
-    };
-
-    // Handle quantity increment & decrement
+    };        
+    
+    // ✅ Fix quantity update to update orders in localStorage
     const handleQuantityChange = (index, delta) => {
         const updatedOrders = [...orders];
         const newQuantity = updatedOrders[index].quantity + delta;
-
+    
         if (newQuantity >= 1) {
             updatedOrders[index].quantity = newQuantity;
             setOrders(updatedOrders);
-            localStorage.setItem(`cart_${loggedInUser}`, JSON.stringify(updatedOrders));
+            localStorage.setItem(`orders_${loggedInUser}`, JSON.stringify(updatedOrders));
         }
     };
-
-    // Remove an order (Cancel Order)
+    
+    // ✅ Fix order cancellation to update `orders_${user}`
     const handleCancelOrder = (index) => {
         const updatedOrders = orders.filter((_, i) => i !== index);
         setOrders(updatedOrders);
-        localStorage.setItem(`cart_${loggedInUser}`, JSON.stringify(updatedOrders));
-    };
+        localStorage.setItem(`orders_${loggedInUser}`, JSON.stringify(updatedOrders));
+    };    
 
     // Handle Payment (Redirect or API Call)
     const handleMakePayment = (order) => {
@@ -77,8 +81,8 @@ const Order = () => {
                             <li className="nav-item"><a className="nav-link" href="#events">Events</a></li>
                             <li className="nav-item"><a className="nav-link" href="#blogs">Blogs</a></li>
                             <li className="nav-item"><Link className="nav-link" to="/shop">Shop</Link></li>
-                            <li className="nav-item"><Link className="nav-link" to="/contact">Contact</Link></li>
                             <li className="nav-item"><Link className="nav-link" to="/orders">Orders</Link></li>
+                            <li className="nav-item"><Link className="nav-link" to="/contact">Contact</Link></li>
 
                             {!loggedInUser ? (
                                 <li className="nav-item"><Link className="nav-link" to="/login">Login</Link></li>
@@ -143,18 +147,8 @@ const Order = () => {
 
                                         {/* Buttons (Make Payment & Cancel Order) */}
                                         <div className="d-flex justify-content-between">
-                                            <button 
-                                                className="btn btn-primary w-50 me-2"
-                                                onClick={() => handleMakePayment(order)}
-                                            >
-                                                Make Payment
-                                            </button>
-                                            <button 
-                                                className="btn btn-outline-danger w-50"
-                                                onClick={() => handleCancelOrder(index)}
-                                            >
-                                                Cancel Order
-                                            </button>
+                                            <button className="btn btn-primary w-50 me-2" onClick={() => handleMakePayment(order)}> Make Payment </button>
+                                            <button className="btn btn-outline-danger w-50" onClick={() => handleCancelOrder(index, order.id)}> Cancel Order </button>
                                         </div>
                                     </div>
                                 </div>

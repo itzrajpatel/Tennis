@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
@@ -61,6 +61,7 @@ const Home = () => {
   const [clubs, setClubs] = useState(0);
   const [articles, setArticles] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const duration = 8000; // 8 seconds
@@ -126,7 +127,7 @@ const Home = () => {
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid" style={{ gap: "15px" }}>
         <img alt="Logo" src={logo} height="50px" width="50px" style={{ margin: "0 20px" }} />
-        <a className="navbar-brand" href="/" style={{ fontFamily: "Ovo, serif", fontSize: "19px", fontWeight: "bold" }}>
+        <a className="navbar-brand mx-auto" href="/" style={{ fontFamily: "Ovo, serif", fontSize: "20px", fontWeight: "bold" }}>
           Indian Tennis Academy
         </a>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -147,10 +148,10 @@ const Home = () => {
               <Link className="nav-link" to="/shop">Shop</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/contact">Contact</Link>
+              <Link className="nav-link" to="/orders">Orders</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/orders">Orders</Link>
+              <Link className="nav-link" to="/contact">Contact</Link>
             </li>
             
             {/* Conditionally render Login or Profile Image */}
@@ -268,7 +269,7 @@ const Home = () => {
             </div>
             <h4 className="mt-3" style={{ fontFamily: "Cormorant Garamond, serif" }}>OUR CLUB</h4>
             <p className="text-dark">Consectetur adipiscing elit, sed do euismod tempo.</p>
-            <button className="btn mb-5">READ MORE</button>
+            <button className="btn mb-5" style={{ border: "none"}}>READ MORE</button>
           </div>
         </div>
 
@@ -281,7 +282,7 @@ const Home = () => {
             </div>
             <h4 className="mt-3" style={{ fontFamily: "Cormorant Garamond, serif" }}>COACHING</h4>
             <p className="text-dark">Consectetur adipiscing elit, sed do euismod tempo.</p>
-            <button className="btn mb-5">READ MORE</button>
+            <button className="btn mb-5" style={{ border: "none"}}>READ MORE</button>
           </div>
         </div>
 
@@ -294,7 +295,7 @@ const Home = () => {
             </div>
             <h4 className="mt-3" style={{ fontFamily: "Cormorant Garamond, serif" }}>OUR STORE</h4>
             <p className="text-dark">Consectetur adipiscing elit, sed do euismod tempo.</p>
-            <button className="btn mb-5">READ MORE</button>
+            <button className="btn mb-5" onClick={() => {navigate("/shop")}} style={{ border: "none"}}>READ MORE</button>
           </div>
         </div>
 
@@ -306,7 +307,7 @@ const Home = () => {
             </div>
             <h4 className="mt-3" style={{ fontFamily: "Cormorant Garamond, serif" }}>CONTACT US</h4>
             <p className="text-dark">Consectetur adipiscing elit, sed do euismod tempo.</p>
-            <button className="btn mb-5">READ MORE</button>
+            <button className="btn mb-5" onClick={() => {navigate("/contact")}} style={{ border: "none"}}>READ MORE</button>
           </div>
         </div>
       </div>

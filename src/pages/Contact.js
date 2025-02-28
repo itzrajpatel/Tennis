@@ -51,10 +51,10 @@ const Contact = () => {
               <Link className="nav-link" to="/shop">Shop</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/contact">Contact</Link>
+              <Link className="nav-link" to="/orders">Orders</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/orders">Orders</Link>
+              <Link className="nav-link" to="/contact">Contact</Link>
             </li>
 
             {/* Conditionally render Login or Profile Image */}

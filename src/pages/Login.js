@@ -5,6 +5,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import "../App.css";
 import "../styles/Login.css";
 import logo from "../assets/logo.png"; // Importing the logo
+import axios from "axios";
 
 const LoginSignup = () => {
     const [isSignup, setIsSignup] = useState(false);
@@ -12,58 +13,33 @@ const LoginSignup = () => {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
-    // Check if the user is already logged in
-    useEffect(() => {
-        if (localStorage.getItem("loggedInUser")) {
-            alert("You are already logged in!");
-            navigate("/home");
-        }
-    }, [navigate]);
-
-    // Handle Signup
-    const handleSignup = (event) => {
+    // Signup Function
+    const handleSignup = async (event) => {
         event.preventDefault();
-        
-        if (localStorage.getItem(username)) {
-            alert("Username already exists! Please choose a different username.");
-            return;
+        try {
+            const response = await axios.post("http://localhost:5000/register", { username, password });
+            alert(response.data.message);
+            setIsSignup(false);
+            setUsername("");
+            setPassword("");
+        } catch (error) {
+            alert(error.response.data.message || "Signup failed!");
         }
-
-        localStorage.setItem(username, JSON.stringify({ password }));
-        alert("Signup successful! Please login.");
-        setIsSignup(false);
-        setUsername("");
-        setPassword("");
     };
 
-    // Handle Login
-    const handleLogin = (event) => {
+    // Login Function
+    const handleLogin = async (event) => {
         event.preventDefault();
-        
-        const storedUser = localStorage.getItem(username);
-        if (!storedUser) {
-            alert("User not found. Please sign up first.");
-            return;
+        try {
+            const response = await axios.post("http://localhost:5000/login", { username, password });
+            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("loggedInUser", response.data.username);
+            alert("Login successful!");
+            navigate("/");
+        } catch (error) {
+            alert(error.response.data.message || "Login failed!");
         }
-
-        const userData = JSON.parse(storedUser);
-        if (userData.password !== password) {
-            alert("Incorrect password. Please try again.");
-            return;
-        }
-
-        localStorage.setItem("loggedInUser", username);
-        alert("Login successful!");
-        navigate("/"); // Redirect to home after login
-    };
-
-    // Handle Logout
-    const handleLogout = () => {
-        localStorage.removeItem("loggedInUser");
-        alert("Logged out successfully!");
-        navigate("/login");
-    };
-
+    };       
     return (
         <div className="login-container">
             <a href="/">
