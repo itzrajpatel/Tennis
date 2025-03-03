@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "../App.css";
 import "../styles/Button.css";
+import "../styles/navbar.css";
 import logo from "../assets/logo.png"; // Importing the logo
 import avatar from "../assets/avatar.png"; // Importing the avatar
 
@@ -28,65 +29,74 @@ const Contact = () => {
     <>
         {/* <--- NAVBAR --->*/}
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div className="container-fluid" style={{ gap: "15px" }}>
-        <img alt="Logo" src={logo} height="50px" width="50px" style={{ margin: "0 20px" }} />
-        <a className="navbar-brand" href="/" style={{ fontFamily: "Ovo, serif", fontSize: "19px", fontWeight: "bold" }}>
-          Indian Tennis Academy
-        </a>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav ms-auto" style={{ gap: "12px" }}>
-            <li className="nav-item">
-              <Link className="nav-link" to="/">Home</Link>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#events">Events</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#blogs">Blogs</a>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/shop">Shop</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/orders">Orders</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/contact">Contact</Link>
-            </li>
+          <div className="container-fluid d-flex align-items-center" style={{ gap: "10px" }}>
+            
+            {/* Logo */}
+            <img alt="Logo" src={logo} height="45px" width="45px" className="ms-2" />
 
-            {/* Conditionally render Login or Profile Image */}
-            {!loggedInUser ? (
-              <li className="nav-item">
-                <Link className="nav-link" to="/login">Login</Link>
-              </li>
-            ) : (
-              <li className="nav-item dropdown">
-                <img 
-                  src={avatar} 
-                  className="rounded-circle mt-2" 
-                  alt="Profile" 
-                  width="30" 
-                  height="30" 
-                  data-bs-toggle="dropdown" 
-                  aria-expanded="false" 
-                  style={{ cursor: "pointer" }}
-                />
-                <ul className="dropdown-menu dropdown-menu-end mt-3 bg-dark">
-                  <li>
-                    <button id="logoutbtn" className="dropdown-item text-light" onClick={handleLogout}>
-                      Logout
-                    </button>
+            {/* Brand Name */}
+            <a className="navbar-brand mx-auto d-lg-block" href="/" 
+              style={{ fontFamily: "Ovo, serif", fontSize: "18px", fontWeight: "bold" }}>
+              Indian Tennis Academy
+            </a>
+
+            {/* Toggler Button for Mobile */}
+            <button className="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+              <span className="navbar-toggler-icon"></span>
+            </button>
+
+            {/* Navbar Links */}
+            <div className="collapse navbar-collapse justify-content-center text-center" id="navbarNav">
+              <ul className="navbar-nav ms-auto text-center" style={{ gap: "10px" }}>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/">Home</Link>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#events">Events</a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#blogs">Blogs</a>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/shop">Shop</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/orders">Orders</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/contact">Contact</Link>
+                </li>
+
+                {/* Conditionally Render Login or Profile Image */}
+                {!loggedInUser ? (
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/login">Login</Link>
                   </li>
-                </ul>
-              </li>
-            )}
-          </ul>
-        </div>
-      </div>
-    </nav>
+                ) : (
+                  <li className="nav-item dropdown">
+                    <img 
+                      src={avatar} 
+                      className="rounded-circle mt-2" 
+                      alt="Profile" 
+                      width="30" 
+                      height="30" 
+                      data-bs-toggle="dropdown" 
+                      aria-expanded="false" 
+                      style={{ cursor: "pointer" }}
+                    />
+                    <ul className="dropdown-menu dropdown-menu-end mt-3 bg-danger justify-content-center text-center">
+                      <li>
+                        <button id="logoutbtn" className="dropdown-item text-light" onClick={handleLogout}>
+                          Logout
+                        </button>
+                      </li>
+                    </ul>
+                  </li>
+                )}
+              </ul>
+            </div>
+          </div>
+        </nav>
 
         <div className="container-fluid">
             <div className="row align-items-center">
