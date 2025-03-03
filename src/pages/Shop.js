@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "../App.css";
 import "../styles/Button.css";
+import "../styles/shop.css";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png"; // Importing the logo
@@ -332,29 +333,84 @@ const Shop = () => {
                 <h1 className="text-center mt-5"> <i style={{ fontSize: "35px" }} className='fas'>&#xf107;</i> </h1>
                 <div className="row text-center p-5 g-5 my-5">
                     <div className="col-md-8 mx-auto">
-                        <div className="row">
-                            {currentItems.map((product) => (
-                            <div className="col-md-5 col-sm-6 mb-5 mx-auto">
-                                <div className="p-4 shop-item"  style={{ height: "550px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-between", borderRadius: "12px", boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.2)", padding: "20px", background: "linear-gradient(135deg, #4b79a1, #283e51)"}}>
-                                    {/* Enlarged Image Container */}
-                                    <div style={{ width: "100%", height: "250px", display: "flex", justifyContent: "center", alignItems: "center", padding: "15px", borderRadius: "10px" }}>
-                                        <img src={product.image} alt={product.name} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
-                                    </div>
-                            
-                                    {/* Larger Product Name */}
-                                    <h4 style={{ fontFamily: "Cormorant Garamond, serif", fontWeight: "bold", textAlign: "center", fontSize: "26px", color: "white" }}>{product.name}</h4>
-                            
-                                    {/* Bigger Price Display */}
-                                    <p style={{fontSize: "30px", fontWeight: "bold", color: "white" }}>${product.price}.00</p>
-                            
-                                    {/* Larger Add to Cart Button */}
-                                    <button className="btn bg-dark text-light" style={{ width: "200px", fontSize: "15px", padding: "12px 0", borderRadius: "10px" }}  key={product.id} onClick={() => addToCart(product)}>
-                                        ADD TO CART <i className="fa fa-shopping-cart mx-1" aria-hidden="true"></i>
-                                    </button>
-                                </div>
-                            </div>                                                
-                            ))}
-                        </div>
+                    <div className="row">
+  {currentItems.map((product) => (
+    <div className="col-md-5 col-sm-6 col-12 mb-5 mx-auto">
+      <div
+        className="p-4 shop-item"
+        style={{
+          height: "550px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderRadius: "12px",
+          boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.2)",
+          padding: "20px",
+          background: "linear-gradient(135deg, #4b79a1, #283e51)",
+        }}
+      >
+        {/* Enlarged Image Container */}
+        <div
+          className="d-flex justify-content-center align-items-center"
+          style={{
+            width: "100%",
+            height: "auto",
+            minHeight: "180px",
+            padding: "10px",
+            borderRadius: "10px",
+          }}
+        >
+          <img
+            src={product.image}
+            alt={product.name}
+            style={{
+              maxWidth: "100%",
+              maxHeight: "250px",
+              objectFit: "contain",
+            }}
+          />
+        </div>
+
+        {/* Product Name */}
+        <h4
+          className="fw-bold text-white text-center"
+          style={{
+            fontFamily: "Cormorant Garamond, serif",
+            fontSize: "26px", // Default size for larger screens
+          }}
+        >
+          {product.name}
+        </h4>
+
+        {/* Price Display */}
+        <p
+          className="fw-bold text-white text-center"
+          style={{
+            fontSize: "30px", // Default size for larger screens
+          }}
+        >
+          ${product.price}.00
+        </p>
+
+        {/* Add to Cart Button */}
+        <button
+          className="btn bg-dark text-light w-100 d-md-inline-block"
+          style={{
+            maxWidth: "200px",
+            fontSize: "15px",
+            padding: "12px 0",
+            borderRadius: "10px",
+          }}
+          key={product.id}
+          onClick={() => addToCart(product)}
+        >
+          ADD TO CART <i className="fa fa-shopping-cart mx-1" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  ))}
+</div>
 
                         {/* Testing */}
                         <nav>
@@ -450,9 +506,21 @@ const Shop = () => {
                             <input type="range" className="form-range mx-auto" data-bs-theme="dark" min="10" max="170" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} />
                             <p className="text-dark" style={{ textAlign: "center"}}>Price: ${maxPrice}</p>
                         </form>
-                        <button className="btn text-light" style={{ backgroundColor: "#2eac6d", width: "200px", borderRadius: "30px", boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)" }} onClick={handleCheckout}>
-                          CHECK OUT <i style={{ fontSize: "15px" }} className="fas mx-2">&#xf291;</i>
-                        </button>
+                        <button
+  className="btn text-light w-100"
+  style={{
+    backgroundColor: "#2eac6d",
+    maxWidth: "200px", // Ensures it doesn't stretch too much
+    borderRadius: "30px",
+    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
+    fontSize: "16px", // Default for larger screens
+    padding: "12px 0",
+  }}
+  onClick={handleCheckout}
+>
+  CHECK OUT
+  <i className="fas mx-2" style={{ fontSize: "15px" }}>&#xf291;</i>
+</button>
                     </div>
                 </div>
             </div>

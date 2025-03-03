@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "../App.css";
 import "../styles/Button.css";
+import "../styles/navbar.css";
 import logo from "../assets/logo.png"; // Importing the logo
 import avatar from "../assets/avatar.png"; // Importing the avatar
 import pic7 from "../assets/pic-7.jpg";
@@ -124,67 +125,75 @@ const Home = () => {
   return (
     <>
       {/* <--- NAVBAR --->*/}
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div className="container-fluid" style={{ gap: "15px" }}>
-        <img alt="Logo" src={logo} height="50px" width="50px" style={{ margin: "0 20px" }} />
-        <a className="navbar-brand mx-auto" href="/" style={{ fontFamily: "Ovo, serif", fontSize: "20px", fontWeight: "bold" }}>
-          Indian Tennis Academy
-        </a>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav ms-auto" style={{ gap: "12px" }}>
-            <li className="nav-item">
-              <Link className="nav-link" to="/">Home</Link>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#events">Events</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#blogs">Blogs</a>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/shop">Shop</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/orders">Orders</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/contact">Contact</Link>
-            </li>
-            
-            {/* Conditionally render Login or Profile Image */}
-            {!loggedInUser ? (
-              <li className="nav-item">
-                <Link className="nav-link" to="/login">Login</Link>
-              </li>
-            ) : (
-              <li className="nav-item dropdown">
-                <img 
-                  src={avatar} 
-                  className="rounded-circle mt-2" 
-                  alt="Profile" 
-                  width="30" 
-                  height="30" 
-                  data-bs-toggle="dropdown" 
-                  aria-expanded="false" 
-                  style={{ cursor: "pointer" }}
-                />
-                <ul className="dropdown-menu dropdown-menu-end mt-3 bg-dark">
-                  <li>
-                    <button id="logoutbtn" className="dropdown-item text-light" onClick={handleLogout}>
-                      Logout
-                    </button>
-                  </li>
-                </ul>
-              </li>
-            )}
-          </ul>
-        </div>
-      </div>
-    </nav>
+<nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div className="container-fluid d-flex align-items-center" style={{ gap: "10px" }}>
+    
+    {/* Logo */}
+    <img alt="Logo" src={logo} height="45px" width="45px" className="ms-2" />
 
+    {/* Brand Name */}
+    <a className="navbar-brand mx-auto d-lg-block" href="/" 
+       style={{ fontFamily: "Ovo, serif", fontSize: "18px", fontWeight: "bold" }}>
+      Indian Tennis Academy
+    </a>
+
+    {/* Toggler Button for Mobile */}
+    <button className="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span className="navbar-toggler-icon"></span>
+    </button>
+
+    {/* Navbar Links */}
+    <div className="collapse navbar-collapse justify-content-center text-center" id="navbarNav">
+      <ul className="navbar-nav ms-auto text-center" style={{ gap: "10px" }}>
+        <li className="nav-item">
+          <Link className="nav-link" to="/">Home</Link>
+        </li>
+        <li className="nav-item">
+          <a className="nav-link" href="#events">Events</a>
+        </li>
+        <li className="nav-item">
+          <a className="nav-link" href="#blogs">Blogs</a>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link" to="/shop">Shop</Link>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link" to="/orders">Orders</Link>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link" to="/contact">Contact</Link>
+        </li>
+
+        {/* Conditionally Render Login or Profile Image */}
+        {!loggedInUser ? (
+          <li className="nav-item">
+            <Link className="nav-link" to="/login">Login</Link>
+          </li>
+        ) : (
+          <li className="nav-item dropdown">
+            <img 
+              src={avatar} 
+              className="rounded-circle mt-2" 
+              alt="Profile" 
+              width="30" 
+              height="30" 
+              data-bs-toggle="dropdown" 
+              aria-expanded="false" 
+              style={{ cursor: "pointer" }}
+            />
+            <ul className="dropdown-menu dropdown-menu-end mt-3 bg-danger justify-content-center text-center">
+              <li>
+                <button id="logoutbtn" className="dropdown-item text-light" onClick={handleLogout}>
+                  Logout
+                </button>
+              </li>
+            </ul>
+          </li>
+        )}
+      </ul>
+    </div>
+  </div>
+</nav>
       
       <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">
       {/* Carousel Indicators */}
@@ -414,58 +423,61 @@ const Home = () => {
     </div>
 
     {/* <--- SECTION-5 ---> */}
-    <div className="container-fluid my-5 p-5" style={{ backgroundColor: "#f3f8f9" }}>
-      <div className="row text-center">
-        {/* GROUP MEMBERSHIP */}
-        <div className="col-md-4">
-          <div className="p-4">
-            <div className="bg-white text-dark text-center mx-auto p-3 shadow-lg rounded" style={{ height: "100%", width: "auto" }}>
-              <h1 className="py-3" style={{ fontSize: "25px", fontFamily: "Oswald, sans-serif" }}>GROUP</h1>
-              <p className="text-muted" style={{ fontSize: "19px" }}>Lorem ipsum dolor</p>
-              <h1 style={{ fontSize: "60px", fontFamily: "Oswald, sans-serif", marginTop: "50px" }}>
-                <sup style={{ fontSize: "0.6em" }}>$</sup> 59 <span className="text-muted" style={{ fontSize: "30px" }}>/MO</span>
-              </h1>
-              <p className="text-muted mt-3">Elis tempor</p>
-              <p className="text-muted mt-2">Adipiscing consect</p>
-              <p className="text-muted mt-2">Voluptatem quia voluptas</p>
-              <button type="button" className="btn btn-success mt-5" style={{ height: "auto", width: "auto" }}>GET NOW</button>
-            </div>
-          </div>
-        </div>
-
-        {/* PERSONAL MEMBERSHIP */}
-        <div className="col-md-4">
-          <div className="p-4">
-            <div className="bg-white text-dark text-center mx-auto p-3 shadow-lg rounded" style={{ height: "100%", width: "auto" }}>
-              <h1 className="py-3" style={{ fontSize: "25px", fontFamily: "Oswald, sans-serif" }}>PERSONAL</h1>
-              <p className="text-muted" style={{ fontSize: "19px" }}>Lorem ipsum dolor</p>
-              <h1 style={{ fontSize: "60px", fontFamily: "Oswald, sans-serif", marginTop: "50px" }}>
-                <sup style={{ fontSize: "0.6em" }}>$</sup> 99 <span className="text-muted" style={{ fontSize: "30px" }}>/MO</span>
-              </h1>
-              <p className="text-muted mt-3">Elis tempor</p>
-              <p className="text-muted mt-2">Adipiscing consect</p>
-              <p className="text-muted mt-2">Voluptatem quia voluptas</p>
-              <button type="button" className="btn btn-dark mt-5" style={{ height: "auto", width: "auto" }}>GET NOW</button>
-            </div>
-          </div>
-        </div>
-
-        {/* MEMBERSHIP INFO & VIDEO */}
-        <div className="col-md-4 d-flex flex-column align-items-center justify-content-center text-center p-4">
-          <h4 className="text-uppercase" style={{ fontSize: "20px", fontFamily: "Lucida Sans, sans-serif", letterSpacing: "3px", marginTop: "20px" }}>Our Plans</h4>
-          <h1 className="my-4" style={{ fontFamily: "Oswald, sans-serif" }}>Club Membership</h1>
-          <p className="text-muted">Adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.</p>
-
-          {/* Video Section */}
-          <div className="my-4 d-flex justify-content-center align-items-center p-3 rounded" style={{ cursor: "pointer" }}>
-            <div className="rounded-circle d-flex justify-content-center align-items-center border" style={{ width: "50px", height: "50px", marginRight: "15px" }}>
-              <img src={photo14} width="30px" height="30px" alt="Play Icon" />
-            </div>
-            <p className="mb-0 text-dark" style={{ fontFamily: "Oswald, sans-serif" }}>View Video Presentation</p>
+<div className="container-fluid my-5 p-5" style={{ backgroundColor: "#f3f8f9" }}>
+  <div className="row text-center">
+    
+    {/* MEMBERSHIP PLANS */}
+    {[{ name: "GROUP", price: 59, color: "success" }, { name: "PERSONAL", price: 99, color: "dark" }].map((plan, idx) => (
+      <div key={idx} className="col-md-4 col-12 mb-4">
+        <div className="p-4">
+          <div className="bg-white text-dark text-center mx-auto p-3 shadow-lg rounded"
+            style={{ width: "100%", maxWidth: "350px" }}>
+            
+            <h1 className="py-3" style={{ fontSize: "clamp(20px, 5vw, 25px)", fontFamily: "Oswald, sans-serif" }}>
+              {plan.name}
+            </h1>
+            <p className="text-muted" style={{ fontSize: "clamp(14px, 3vw, 19px)" }}>Lorem ipsum dolor</p>
+            <h1 style={{ fontSize: "clamp(40px, 8vw, 60px)", fontFamily: "Oswald, sans-serif", marginTop: "30px" }}>
+              <sup style={{ fontSize: "0.6em" }}>$</sup> {plan.price} <span className="text-muted" style={{ fontSize: "clamp(20px, 4vw, 30px)" }}>/MO</span>
+            </h1>
+            <p className="text-muted mt-3">Elis tempor</p>
+            <p className="text-muted mt-2">Adipiscing consect</p>
+            <p className="text-muted mt-2">Voluptatem quia voluptas</p>
+            <button type="button" className={`btn btn-${plan.color} mt-4`} style={{ padding: "clamp(8px, 2vw, 14px) clamp(15px, 5vw, 30px)", fontSize: "clamp(14px, 3vw, 18px)", minWidth: "120px" }}>
+              GET NOW
+            </button>
           </div>
         </div>
       </div>
+    ))}
+
+    {/* MEMBERSHIP INFO & VIDEO */}
+    <div className="col-md-4 col-12 text-center p-4 mt-5">
+      <h4 className="text-uppercase" style={{ fontSize: "clamp(16px, 4vw, 20px)", fontFamily: "Lucida Sans, sans-serif", letterSpacing: "3px" }}>
+        Our Plans
+      </h4>
+      <h1 className="my-4" style={{ fontSize: "clamp(24px, 6vw, 40px)", fontFamily: "Oswald, sans-serif" }}>
+        Club Membership
+      </h1>
+      <p className="text-muted" style={{ fontSize: "clamp(14px, 3vw, 18px)" }}>
+        Adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </p>
+
+      {/* Video Section */}
+      <div className="d-flex justify-content-center align-items-center p-3 rounded mt-3"
+        style={{ cursor: "pointer" }}>
+        <div className="rounded-circle d-flex justify-content-center align-items-center border"
+          style={{ width: "clamp(40px, 8vw, 50px)", height: "clamp(40px, 8vw, 50px)", marginRight: "15px" }}>
+          <img src={photo14} width="30px" height="30px" alt="Play Icon" />
+        </div>
+        <p className="mb-0 text-dark" style={{ fontSize: "clamp(14px, 3vw, 18px)", fontFamily: "Oswald, sans-serif" }}>
+          View Video Presentation
+        </p>
+      </div>
     </div>
+
+  </div>
+</div>
 
     {/* <--- SECTION-6 --> */}
     <div id="events" className="container-fluid my-5">
@@ -507,12 +519,11 @@ const Home = () => {
                         src={event.image}
                         height="170px"
                         width="100%"
-                        className="my-5"
                         style={{ display: "block" }}
                         alt="Event"
                       />
                     </div>
-                    <div className="col-md-6 text-center p-5 my-5">
+                    <div className="col-md-6 text-center p-5">
                       <h1 style={{ fontSize: "20px", fontFamily: "Oswald, sans-serif" }}>
                         {event.title}
                       </h1>

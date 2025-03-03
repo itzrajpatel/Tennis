@@ -1,0 +1,30 @@
+@media (max-width: 576px) {
+    .shop-item {
+      height: auto !important; /* Allows dynamic height */
+      padding: 15px !important; /* Reduce padding */
+    }
+
+    .shop-item h4 {
+      font-size: 22px !important; /* Smaller font size */
+    }
+
+    .shop-item p {
+      font-size: 20px !important; /* Adjust price font size */
+    }
+
+    .shop-item button {
+      font-size: 14px !important;
+      padding: 10px 0 !important;
+    }
+
+    .btn {
+        max-width: 180px !important; /* Slightly smaller width */
+        font-size: 14px !important; /* Reduce font size */
+        padding: 10px 0 !important; /* Reduce padding */
+        border-radius: 25px !important; /* Slightly smaller border radius */
+      }
+      
+    .btn i {
+        font-size: 13px !important; /* Adjust icon size */
+    }
+  }
