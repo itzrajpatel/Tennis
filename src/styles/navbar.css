@@ -1,0 +1,22 @@
+@media (max-width: 576px) {
+    .navbar-brand {
+      font-size: 16px !important;
+    }
+
+    .navbar-toggler {
+      padding: 5px 10px !important;
+    }
+
+    .navbar-nav {
+      gap: 5px !important;
+    }
+
+    .nav-item .nav-link {
+      font-size: 14px !important;
+      padding: 8px !important;
+    }
+
+    .dropdown-menu {
+      min-width: 120px !important;
+    }
+  }
