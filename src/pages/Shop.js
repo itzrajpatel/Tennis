@@ -115,101 +115,130 @@ const Shop = () => {
       } catch (error) {
           console.error("Error adding item:", error);
       }
-  };  
+  };
 
-    // const handleCheckout = () => {
-    //   if (!loggedInUser) {
-    //       alert("Please log in to continue!");
-    //       return;
-    //   }
+  //   const handleCheckout = async () => {
+  //     if (!loggedInUser) {
+  //         alert("Please log in to continue!");
+  //         return;
+  //     }
+  
+  //     if (cart.length === 0) {
+  //         alert("Please add items to the cart...");
+  //         return;
+  //     }
+  
+  //     // ✅ Fetch existing orders
+  //     let existingOrders = JSON.parse(localStorage.getItem(`orders_${loggedInUser}`)) || [];
+  
+  //     // ✅ Prevent duplicate items in orders
+  //     const duplicateItems = cart.filter(cartItem =>
+  //         existingOrders.some(orderItem => orderItem.product_name === cartItem.product_name)
+  //     );
+  
+  //     if (duplicateItems.length > 0) {
+  //         alert(`${duplicateItems.map(item => item.product_name).join(", ")} already added...`);
+  //         return;
+  //     }
+  
+  //     // ✅ Add new cart items to orders
+  //     existingOrders = [...existingOrders, ...cart];
+  //     localStorage.setItem(`orders_${loggedInUser}`, JSON.stringify(existingOrders));
+  
+  //     try {
+  //         console.log("Sending DELETE request to /cart/clear for user:", loggedInUser);
+  
+  //         // ✅ Remove items from MySQL cart table
+  //         const response = await fetch("http://localhost:5000/cart/clear", {
+  //             method: "DELETE",
+  //             headers: {
+  //                 "Content-Type": "application/json",
+  //             },
+  //             body: JSON.stringify({ username: loggedInUser }), // ✅ Ensure request body is correctly formatted
+  //         });
+  
+  //         const data = await response.json();
+  //         console.log("Response from backend:", data);
+  
+  //         if (!response.ok) {
+  //             throw new Error(data.message || "Error clearing cart from database");
+  //         }
+  
+  //         // ✅ Clear the cart in state & localStorage
+  //         setCart([]);
+  //         localStorage.removeItem(`cart_${loggedInUser}`);
+  
+  //         // ✅ Redirect to orders page
+  //         navigate("/orders");
+  
+  //     } catch (error) {
+  //         console.error("Checkout Error:", error);
+  //         alert("Error processing checkout!");
+  //     }
+  // };
+  const handleCheckout = async () => {
+    if (!loggedInUser) {
+        alert("Please log in to continue!");
+        return;
+    }
 
-    //   if (cart.length === 0) {
-    //       alert("Please add items to cart...");
-    //       return;
-    //   }
+    if (cart.length === 0) {
+        alert("Please add items to the cart...");
+        return;
+    }
 
-    //   // ✅ Fetch existing orders
-    //   const existingOrders = JSON.parse(localStorage.getItem(`orders_${loggedInUser}`)) || [];
+    // ✅ Store orders in MySQL
+    try {
+        console.log("Sending orders to MySQL for user:", loggedInUser);
 
-    //   // ✅ Check for duplicate items
-    //   const duplicateItems = cart.filter(cartItem =>
-    //       existingOrders.some(orderItem => orderItem.name === cartItem.name)
-    //   );
+        const orderResponse = await fetch("http://localhost:5000/orders/add", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username: loggedInUser, orders: cart }), // ✅ Ensure correct data format
+        });
 
-    //   if (duplicateItems.length > 0) {
-    //       alert(`${duplicateItems.map(item => item.name).join(", ")} already added...`);
-    //       return;
-    //   }
+        const orderData = await orderResponse.json();
+        console.log("Response from backend (orders):", orderData);
 
-    //   // ✅ Add new items to orders
-    //   const updatedOrders = [...existingOrders, ...cart];
-    //   localStorage.setItem(`orders_${loggedInUser}`, JSON.stringify(updatedOrders));
+        if (!orderResponse.ok) {
+            throw new Error(orderData.message || "Error saving orders to database");
+        }
 
-    //   // ✅ Empty the cart after checkout
-    //   setCart([]);
-    //   localStorage.removeItem(`cart_${loggedInUser}`);
+    } catch (error) {
+        console.error("Error saving orders:", error);
+        alert("Error processing orders!");
+        return;
+    }
 
-    //   navigate("/orders");
-    // };
-    const handleCheckout = async () => {
-      if (!loggedInUser) {
-          alert("Please log in to continue!");
-          return;
-      }
-  
-      if (cart.length === 0) {
-          alert("Please add items to the cart...");
-          return;
-      }
-  
-      // ✅ Fetch existing orders
-      let existingOrders = JSON.parse(localStorage.getItem(`orders_${loggedInUser}`)) || [];
-  
-      // ✅ Prevent duplicate items in orders
-      const duplicateItems = cart.filter(cartItem =>
-          existingOrders.some(orderItem => orderItem.product_name === cartItem.product_name)
-      );
-  
-      if (duplicateItems.length > 0) {
-          alert(`${duplicateItems.map(item => item.product_name).join(", ")} already added...`);
-          return;
-      }
-  
-      // ✅ Add new cart items to orders
-      existingOrders = [...existingOrders, ...cart];
-      localStorage.setItem(`orders_${loggedInUser}`, JSON.stringify(existingOrders));
-  
-      try {
-          console.log("Sending DELETE request to /cart/clear for user:", loggedInUser);
-  
-          // ✅ Remove items from MySQL cart table
-          const response = await fetch("http://localhost:5000/cart/clear", {
-              method: "DELETE",
-              headers: {
-                  "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ username: loggedInUser }), // ✅ Ensure request body is correctly formatted
-          });
-  
-          const data = await response.json();
-          console.log("Response from backend:", data);
-  
-          if (!response.ok) {
-              throw new Error(data.message || "Error clearing cart from database");
-          }
-  
-          // ✅ Clear the cart in state & localStorage
-          setCart([]);
-          localStorage.removeItem(`cart_${loggedInUser}`);
-  
-          // ✅ Redirect to orders page
-          navigate("/orders");
-  
-      } catch (error) {
-          console.error("Checkout Error:", error);
-          alert("Error processing checkout!");
-      }
-  };      
+    // ✅ Remove items from MySQL cart table
+    try {
+        console.log("Sending DELETE request to /cart/clear for user:", loggedInUser);
+
+        const response = await fetch("http://localhost:5000/cart/clear", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username: loggedInUser }),
+        });
+
+        const data = await response.json();
+        console.log("Response from backend (cart clear):", data);
+
+        if (!response.ok) {
+            throw new Error(data.message || "Error clearing cart from database");
+        }
+
+        // ✅ Clear local storage and state
+        setCart([]);
+        localStorage.removeItem(`cart_${loggedInUser}`);
+
+        // ✅ Redirect to orders page
+        navigate("/orders");
+
+    } catch (error) {
+        console.error("Checkout Error:", error);
+        alert("Error processing checkout!");
+    }
+};      
 
     const filteredProducts = products.filter(
         (p) => p.price <= maxPrice && p.name.toLowerCase().includes(search.toLowerCase())
@@ -353,84 +382,83 @@ const Shop = () => {
                 <div className="row text-center p-5 g-5 my-5">
                     <div className="col-md-8 mx-auto">
                     <div className="row">
-  {currentItems.map((product) => (
-    <div className="col-md-5 col-sm-6 col-12 mb-5 mx-auto">
-      <div
-        className="p-4 shop-item"
-        style={{
-          height: "550px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "space-between",
-          borderRadius: "12px",
-          boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.2)",
-          padding: "20px",
-          background: "linear-gradient(135deg, #4b79a1, #283e51)",
-        }}
-      >
-        {/* Enlarged Image Container */}
-        <div
-          className="d-flex justify-content-center align-items-center"
-          style={{
-            width: "100%",
-            height: "auto",
-            minHeight: "180px",
-            padding: "10px",
-            borderRadius: "10px",
-          }}
-        >
-          <img
-            src={product.image}
-            alt={product.name}
-            style={{
-              maxWidth: "100%",
-              maxHeight: "250px",
-              objectFit: "contain",
-            }}
-          />
-        </div>
+                          {currentItems.map((product) => (
+                            <div className="col-md-5 col-sm-6 col-12 mb-5 mx-auto">
+                              <div
+                                className="p-4 shop-item"
+                                style={{
+                                  height: "550px",
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  alignItems: "center",
+                                  justifyContent: "space-between",
+                                  borderRadius: "12px",
+                                  boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.2)",
+                                  padding: "20px",
+                                  background: "linear-gradient(135deg, #4b79a1, #283e51)",
+                                }}
+                              >
+                                {/* Enlarged Image Container */}
+                                <div
+                                  className="d-flex justify-content-center align-items-center"
+                                  style={{
+                                    width: "100%",
+                                    height: "auto",
+                                    minHeight: "180px",
+                                    padding: "10px",
+                                    borderRadius: "10px",
+                                  }}
+                                >
+                                  <img
+                                    src={product.image}
+                                    alt={product.name}
+                                    style={{
+                                      maxWidth: "100%",
+                                      maxHeight: "250px",
+                                      objectFit: "contain",
+                                    }}
+                                  />
+                                </div>
 
-        {/* Product Name */}
-        <h4
-          className="fw-bold text-white text-center"
-          style={{
-            fontFamily: "Cormorant Garamond, serif",
-            fontSize: "26px", // Default size for larger screens
-          }}
-        >
-          {product.name}
-        </h4>
+                                {/* Product Name */}
+                                <h4
+                                  className="fw-bold text-white text-center"
+                                  style={{
+                                    fontFamily: "Cormorant Garamond, serif",
+                                    fontSize: "26px", // Default size for larger screens
+                                  }}
+                                >
+                                  {product.name}
+                                </h4>
 
-        {/* Price Display */}
-        <p
-          className="fw-bold text-white text-center"
-          style={{
-            fontSize: "30px", // Default size for larger screens
-          }}
-        >
-          ${product.price}.00
-        </p>
+                                {/* Price Display */}
+                                <p
+                                  className="fw-bold text-white text-center"
+                                  style={{
+                                    fontSize: "30px", // Default size for larger screens
+                                  }}
+                                >
+                                  ${product.price}.00
+                                </p>
 
-        {/* Add to Cart Button */}
-        <button
-          className="btn bg-dark text-light w-100 d-md-inline-block"
-          style={{
-            maxWidth: "200px",
-            fontSize: "15px",
-            padding: "12px 0",
-            borderRadius: "10px",
-          }}
-          key={product.id}
-          onClick={() => addToCart(product)}
-        >
-          ADD TO CART <i className="fa fa-shopping-cart mx-1" aria-hidden="true"></i>
-        </button>
-      </div>
-    </div>
-  ))}
-</div>
-
+                                {/* Add to Cart Button */}
+                                <button
+                                  className="btn bg-dark text-light w-100 d-md-inline-block"
+                                  style={{
+                                    maxWidth: "200px",
+                                    fontSize: "15px",
+                                    padding: "12px 0",
+                                    borderRadius: "10px",
+                                  }}
+                                  key={product.id}
+                                  onClick={() => addToCart(product)}
+                                >
+                                  ADD TO CART <i className="fa fa-shopping-cart mx-1" aria-hidden="true"></i>
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                         {/* Testing */}
                         <nav>
                             <ul className="pagination justify-content-center">
@@ -526,20 +554,20 @@ const Shop = () => {
                             <p className="text-dark" style={{ textAlign: "center"}}>Price: ${maxPrice}</p>
                         </form>
                         <button
-  className="btn text-light w-100"
-  style={{
-    backgroundColor: "#2eac6d",
-    maxWidth: "200px", // Ensures it doesn't stretch too much
-    borderRadius: "30px",
-    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
-    fontSize: "16px", // Default for larger screens
-    padding: "12px 0",
-  }}
-  onClick={handleCheckout}
->
-  CHECK OUT
-  <i className="fas mx-2" style={{ fontSize: "15px" }}>&#xf291;</i>
-</button>
+                          className="btn text-light w-100"
+                          style={{
+                            backgroundColor: "#2eac6d",
+                            maxWidth: "200px", // Ensures it doesn't stretch too much
+                            borderRadius: "30px",
+                            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
+                            fontSize: "16px", // Default for larger screens
+                            padding: "12px 0",
+                          }}
+                          onClick={handleCheckout}
+                        >
+                          CHECK OUT
+                          <i className="fas mx-2" style={{ fontSize: "15px" }}>&#xf291;</i>
+                        </button>
                     </div>
                 </div>
             </div>

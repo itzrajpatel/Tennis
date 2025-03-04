@@ -167,20 +167,6 @@ app.delete("/cart/remove", (req, res) => {
 });
 
 // Remove all cart items for a specific user on checkout
-// app.delete("/cart/clear", (req, res) => {
-//     const { username } = req.body;
-
-//     if (!username) {
-//         return res.status(400).json({ message: "Username is required!" });
-//     }
-
-//     const deleteSQL = "DELETE FROM cart WHERE username = ?";
-//     dbCart.query(deleteSQL, [username], (err, result) => {
-//         if (err) return res.status(500).json({ message: "Error clearing cart!" });
-
-//         return res.json({ message: "Cart cleared successfully!" });
-//     });
-// });
 app.delete("/cart/clear", (req, res) => {
     console.log("Received DELETE request to /cart/clear");
 
@@ -203,6 +189,103 @@ app.delete("/cart/clear", (req, res) => {
         return res.json({ message: "Cart cleared successfully!" });
     });
 });
+
+app.post("/orders/add", (req, res) => {
+    console.log("Received POST request to /orders/add");
+
+    const { username, orders } = req.body;
+
+    if (!username || !orders || !Array.isArray(orders)) {
+        return res.status(400).json({ message: "Invalid order data!" });
+    }
+
+    const values = orders.map(order => [username, order.product_name, order.price, order.quantity, order.image]);
+
+    const insertSQL = "INSERT INTO orders (username, product_name, price, quantity, image) VALUES ?";
+    dbCart.query(insertSQL, [values], (err, result) => {
+        if (err) {
+            console.error("Error inserting orders:", err);
+            return res.status(500).json({ message: "Error saving orders!" });
+        }
+        console.log("Orders saved successfully for user:", username);
+        res.json({ message: "Orders saved successfully!" });
+    });
+});
+
+// TESTING
+app.get("/orders/:username", (req, res) => {
+    const { username } = req.params;
+    const query = "SELECT * FROM orders WHERE username = ?";
+
+    dbCart.query(query, [username], (err, results) => {
+        if (err) {
+            console.error("Error fetching orders:", err);
+            return res.status(500).json({ message: "Error retrieving orders" });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: "No orders found" });
+        }
+
+        res.json(results);
+    });
+});
+
+app.delete("/orders/delete/:id", (req, res) => {
+    const { id } = req.params;
+
+    // ✅ Step 1: Delete the selected order
+    const deleteSQL = "DELETE FROM orders WHERE id = ?";
+    dbCart.query(deleteSQL, [id], (err, result) => {
+        if (err) return res.status(500).json({ message: "Error deleting order!" });
+
+        // ✅ Step 2: Check if the table is empty after deletion
+        const checkSQL = "SELECT COUNT(*) AS count FROM orders";
+        dbCart.query(checkSQL, (err, countResult) => {
+            if (err) return res.status(500).json({ message: "Error checking orders!" });
+
+            if (countResult[0].count === 0) {
+                // ✅ If table is empty, reset AUTO_INCREMENT
+                const resetSQL = "TRUNCATE TABLE orders"; // This ensures all data is removed and auto-increment is reset
+                dbCart.query(resetSQL, (err) => {
+                    if (err) return res.status(500).json({ message: "Error resetting orders table!" });
+                    return res.json({ message: "All orders removed and table reset!" });
+                });
+            } else {
+                // ✅ Step 3: Renumber remaining orders
+                const fetchSQL = "SELECT id FROM orders ORDER BY id ASC";
+                dbCart.query(fetchSQL, (err, items) => {
+                    if (err) return res.status(500).json({ message: "Error fetching updated orders!" });
+
+                    let renumberQueries = [];
+                    items.forEach((item, index) => {
+                        const newId = index + 1;
+                        renumberQueries.push(new Promise((resolve, reject) => {
+                            const updateSQL = "UPDATE orders SET id = ? WHERE id = ?";
+                            dbCart.query(updateSQL, [newId, item.id], (err) => {
+                                if (err) reject(err);
+                                else resolve();
+                            });
+                        }));
+                    });
+
+                    // ✅ Execute renumbering queries
+                    Promise.all(renumberQueries)
+                        .then(() => {
+                            // ✅ Step 4: Reset auto-increment to the latest ID
+                            const updateAutoIncrementSQL = "ALTER TABLE orders AUTO_INCREMENT = ?";
+                            dbCart.query(updateAutoIncrementSQL, [items.length + 1], (err) => {
+                                if (err) return res.status(500).json({ message: "Error updating AUTO_INCREMENT!" });
+                                return res.json({ message: "Order removed and orders renumbered!" });
+                            });
+                        })
+                        .catch((err) => res.status(500).json({ message: "Error renumbering orders!" }));
+                });
+            }
+        });
+    });
+});
+
 
 // **Start Server**
 const PORT = 5000;

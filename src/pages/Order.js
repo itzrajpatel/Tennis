@@ -13,6 +13,37 @@ const Order = () => {
     const [orders, setOrders] = useState([]);
     const navigate = useNavigate();
 
+    // useEffect(() => {
+    //     const user = localStorage.getItem("loggedInUser");
+    //     if (user) {
+    //         setLoggedInUser(user);
+    //         fetchOrders(user);
+    //     }
+    // }, []);
+
+    // const fetchOrders = (user) => {
+    //     const storedOrders = JSON.parse(localStorage.getItem(`orders_${user}`)) || [];
+    //     setOrders(storedOrders);
+    // };
+    
+    //TESTING
+    const fetchOrders = async (user) => {
+        try {
+            const response = await fetch(`http://localhost:5000/orders/${user}`);
+            const data = await response.json();
+            console.log("Fetched Orders Data:", data); // ✅ Debugging Log
+    
+            if (!Array.isArray(data)) {
+                throw new Error("Invalid data format received.");
+            }
+    
+            setOrders(data);
+        } catch (error) {
+            console.error("Error fetching orders:", error);
+        }
+    };        
+    
+    // Fetch orders on component mount
     useEffect(() => {
         const user = localStorage.getItem("loggedInUser");
         if (user) {
@@ -20,16 +51,6 @@ const Order = () => {
             fetchOrders(user);
         }
     }, []);
-    
-    // ✅ Fetch orders correctly from `orders_${user}`
-    // const fetchOrders = (user) => {
-    //     const storedOrders = JSON.parse(localStorage.getItem(`orders_${user}`)) || [];
-    //     setOrders(storedOrders);
-    // };
-    const fetchOrders = (user) => {
-        const storedOrders = JSON.parse(localStorage.getItem(`orders_${user}`)) || [];
-        setOrders(storedOrders);
-    };        
     
     // ✅ Fix quantity update to update orders in localStorage
     const handleQuantityChange = (index, delta) => {
@@ -44,11 +65,27 @@ const Order = () => {
     };
     
     // ✅ Fix order cancellation to update `orders_${user}`
-    const handleCancelOrder = (index) => {
-        const updatedOrders = orders.filter((_, i) => i !== index);
-        setOrders(updatedOrders);
-        localStorage.setItem(`orders_${loggedInUser}`, JSON.stringify(updatedOrders));
-    };    
+    // const handleCancelOrder = (index) => {
+    //     const updatedOrders = orders.filter((_, i) => i !== index);
+    //     setOrders(updatedOrders);
+    //     localStorage.setItem(`orders_${loggedInUser}`, JSON.stringify(updatedOrders));
+    // };
+    const handleCancelOrder = async (orderId) => {
+        try {
+            const response = await fetch(`http://localhost:5000/orders/delete/${orderId}`, {
+                method: "DELETE",
+            });
+    
+            if (!response.ok) {
+                throw new Error("Failed to cancel order");
+            }
+    
+            // ✅ Remove from UI after successful deletion
+            setOrders((prevOrders) => prevOrders.filter(order => order.id !== orderId));
+        } catch (error) {
+            console.error("Error canceling order:", error);
+        }
+    };        
 
     // Handle Payment (Redirect or API Call)
     const handleMakePayment = (order) => {
@@ -120,7 +157,7 @@ const Order = () => {
                                     <img src={order.image} alt={order.name} className="card-img-top"
                                         style={{ height: "200px", objectFit: "contain" }} />
                                     <div className="card-body">
-                                        <h5 className="card-title mb-4 text-center text-light">{order.name}</h5>
+                                        <h5 className="card-title mb-4 text-center text-light">{order.product_name}</h5>
 
                                         {/* Quantity Incrementer */}
                                         <div className="d-flex justify-content-center align-items-center mb-3">
@@ -148,7 +185,10 @@ const Order = () => {
                                         {/* Buttons (Make Payment & Cancel Order) */}
                                         <div className="d-flex justify-content-between">
                                             <button className="btn btn-primary w-50 me-2" onClick={() => handleMakePayment(order)}> Make Payment </button>
-                                            <button className="btn btn-outline-danger w-50" onClick={() => handleCancelOrder(index, order.id)}> Cancel Order </button>
+                                            {/* <button className="btn btn-outline-danger w-50" onClick={() => handleCancelOrder(index, order.id)}> Cancel Order </button> */}
+                                            <button className="btn btn-outline-danger w-50" onClick={() => handleCancelOrder(order.id)}>
+                                                Cancel Order
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
