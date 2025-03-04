@@ -78,8 +78,8 @@ const Order = () => {
                     <div className="collapse navbar-collapse" id="navbarNav">
                         <ul className="navbar-nav ms-auto" style={{ gap: "12px" }}>
                             <li className="nav-item"><Link className="nav-link" to="/">Home</Link></li>
-                            <li className="nav-item"><a className="nav-link" href="#events">Events</a></li>
-                            <li className="nav-item"><a className="nav-link" href="#blogs">Blogs</a></li>
+                            <li className="nav-item"><a className="nav-link" href="/#events">Events</a></li>
+                            <li className="nav-item"><a className="nav-link" href="/#blogs">Blogs</a></li>
                             <li className="nav-item"><Link className="nav-link" to="/shop">Shop</Link></li>
                             <li className="nav-item"><Link className="nav-link" to="/orders">Orders</Link></li>
                             <li className="nav-item"><Link className="nav-link" to="/contact">Contact</Link></li>

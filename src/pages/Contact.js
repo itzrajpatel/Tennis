@@ -52,10 +52,10 @@ const Contact = () => {
                   <Link className="nav-link" to="/">Home</Link>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="#events">Events</a>
+                  <a className="nav-link" href="/#events">Events</a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="#blogs">Blogs</a>
+                  <a className="nav-link" href="/#blogs">Blogs</a>
                 </li>
                 <li className="nav-item">
                   <Link className="nav-link" to="/shop">Shop</Link>
