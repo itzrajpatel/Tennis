@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "../App.css";
 import "../styles/Login.css";
-import logo from "../assets/logo.png"; // Importing the logo
+import logo from "../assets/logo.png";
 import axios from "axios";
 
 const LoginSignup = () => {
